@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+    实现BeanPostProcessor接口,并具体提供,
+    Object postProcessBeforeInitialization(Object bean,String beanName): init-Method方法之前调用
+    Object postProcessAfterInitialization(Object bean,String beanName): init-Method方法之后被调用
+    bean bean: 实例本身
+    beanName: IOC 容器配置的bean的名字.
+    返回值: 实际上返回用户的那个Bean,注意: 可以在以上两个方法中返回bean,甚至返回一个新的bean
+    -->
+    <bean id="car" class="com.baidu.cycle.Car" init-method="init" destroy-method="destroy">
+        <property name="brand" value="DaZ"/>
+    </bean>
+    <!--配置的bean的后置处理器,不需要配置id,IOC容器自动识别是一个BeanPostProcessor-->
+    <bean class="com.baidu.cycle.MyBeanPostProcessor"/>
+</beans>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 接口式开发 namespace名称空间；接口的全类名 标签中的id是： 唯一标识 resultType是： 返回值类型 #｛id｝从传递的参数中取出id -->
+<mapper namespace="com.atguigu.mybatis.dao.EmployeeMapper">
+
+
+	<insert id="addEmp" databaseId="mysql" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		tbl_employee(last_name,email,gender,d_id,emp_status)
+		values
+		(#{lastName},#{email},#{gender},#{dId},#{empStatus})
+	</insert>
+	
+	
+	<select id="getEmpById" resultType="com.atguigu.mybatis.bean.Employee">
+		select id,last_name lastName,email,gender,emp_status empStatus from tbl_employee where id = #{id}
+	</select>
+
+
+	<!--public List<Employee> getEmps(); -->
+	<select id="getEmps"
+		resultType="com.atguigu.mybatis.bean.Employee">
+		select id,last_name lastName,email,gender from tbl_employee
+	</select>
+
+</mapper>

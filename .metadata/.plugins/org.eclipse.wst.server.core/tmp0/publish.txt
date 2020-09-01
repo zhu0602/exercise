@@ -1,0 +1,4 @@
+#Tomcat publish data
+#Thu Aug 06 12:49:08 CST 2020
+org.eclipse.jst.jee.server\:/binary\:D\:\\workspace\\MyBatis-06_ssm\\WebContent\\WEB-INF\\lib\\spring-web-4.0.0.RELEASE.jar=D\:\\softwares\\apache-tomcat-7.0\\webapps\\MyBatis-06_ssm\\WEB-INF\\lib\\spring-web-4.0.0.RELEASE.jar
+org.eclipse.jst.jee.server\:MyBatis-06_ssm=D\:\\softwares\\apache-tomcat-7.0\\webapps\\MyBatis-06_ssm

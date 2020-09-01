@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 接口式开发 namespace名称空间；接口的全类名 标签中的id是： 唯一标识 resultType是： 返回值类型 #｛id｝从传递的参数中取出id -->
+<mapper namespace="com.atguigu.mybatis.dao.EmployeeMapper">
+	
+	<select id="getEmployees" resultType="com.atguigu.mybatis.bean.Employee">
+		select * from tbl_employee
+	</select>
+
+
+</mapper>

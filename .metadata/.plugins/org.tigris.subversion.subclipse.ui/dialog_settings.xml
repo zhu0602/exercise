@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="DirectorySelectionPage.lastParent_svn://loacalhost/OA" value=""/>
+	<item key="DirectorySelectionPage.lastParent_svn://localhost/OA" value=""/>
+	<item key="CommitDialog.location.x" value="550"/>
+	<item key="CommitDialog.location.y" value="38"/>
+	<item key="CommitDialog.size.x" value="1370"/>
+	<item key="CommitDialog.size.y" value="791"/>
+	<item key="CommitDialog.weights.0" value="500"/>
+	<item key="CommitDialog.weights.1" value="500"/>
+	<item key="RepositorySelectionPage.lastRepository" value="svn://localhost/OA"/>
+	<item key="SwitchDialogWithConflictHandling2.location.x" value="643"/>
+	<item key="SwitchDialogWithConflictHandling2.location.y" value="0"/>
+	<item key="SwitchDialogWithConflictHandling2.size.x" value="634"/>
+	<item key="SwitchDialogWithConflictHandling2.size.y" value="931"/>
+	<item key="UrlCombo.svnLove.0" value="svn://localhost/OA/svnLove"/>
+	<item key="HistoryTableProvider.SVNHistoryPage.修订" value="58"/>
+	<item key="HistoryTableProvider.SVNHistoryPage.日期" value="145"/>
+	<item key="HistoryTableProvider.SVNHistoryPage.作者" value="115"/>
+	<item key="HistoryTableProvider.SVNHistoryPage.注释" value="289"/>
+	<section name="NewLocationWizard">
+		<list key="ConfigurationWizardMainPage.STORE_URL_ID">
+			<item value="svn://localhost/OA"/>
+			<item value="svn://loacalhost/OA"/>
+			<item value=""/>
+		</list>
+	</section>
+	<section name="CommitWizard">
+		<item key="VWeight1" value="500"/>
+		<item key="VWeight2" value="500"/>
+		<item key="ShowCompare" value="false"/>
+	</section>
+</section>

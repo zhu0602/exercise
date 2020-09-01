@@ -1,0 +1,7 @@
+<classpath>
+  <container id="MyBatis_06_ssm!org.eclipse.jst.j2ee.internal.web.container">
+    <entry id="D:/workspace/MyBatis_06_ssm/WebContent/WEB-INF/lib/mybatis-3.4.1.jar">
+      <source-attachment-path>D:/尚硅谷Java全套教程/4.尚硅谷全套JAVA教程--JavaEE阶段/尚硅谷Mybatis视频教程/课件&代码/课件&代码/Jar包/mybatis-3-mybatis-3.4.1.zip</source-attachment-path>
+    </entry>
+  </container>
+</classpath>

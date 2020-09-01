@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+    <bean id="person" class="com.baidu.Person">
+        <property name="name" value="Tom"/>
+        <property name="age" value="15"/>
+        <!--集合操作-->
+        <!--<property name="cars">
+              <list>
+                    <ref bean="car"/>
+                    <ref bean="car2"/>
+                  &lt;!&ndash;设置内部bean&ndash;&gt;
+                  <bean class="com.baidu.Car">
+                      <property name="brand" value="ford"/>
+                      <property name="price" value="50000"/>
+                      <property name="maxSpeed" value="900"/>
+                      <property name="minSpeed" value="100"/>
+                  </bean>
+              </list>
+        </property>-->
+    </bean>
+
+    <bean id="car" class="com.baidu.Car">
+        <constructor-arg value="2000" type="double"/>
+        <constructor-arg value="800000" type="int"/>
+        <constructor-arg value="1000" type="double"/>
+    </bean>
+
+    <bean id="car2" class="com.baidu.Car">
+        <property name="brand" value="baoma"/>
+        <property name="price" value="90000"/>
+        <property name="maxSpeed" value="500"/>
+        <property name="minSpeed" value="300"/>
+    </bean>
+
+    <!--  使用级联操作 需要先对属性进行初始化,不然会报错
+        <bean id="person2" class="com.baidu.bean.Person">
+            <property name="name" value="Peter"/>
+            <property name="age" value="30"/>
+            <property name="car" ref="car"/>
+            <property name="car.brand" value="audi"/>
+            <property name="car.price" value="20000"/>
+            <property name="car.maxSpeed" value="90"/>
+            <property name="car.minSpeed" value="60"/>
+        </bean>-->
+
+
+    <bean id="person3" class="com.baidu.Person">
+        <property name="name" value="Hill"/>
+        <property name="age" value="30"/>
+        <property name="cars">
+            <map>
+                <entry key="1" value-ref="car"></entry>
+                <entry key="2" value-ref="car2"></entry>
+                <entry key="3">
+                    <bean class="com.baidu.Car">
+                        <property name="brand" value="Tom"/>
+                        <property name="price" value="60000"/>
+                        <property name="maxSpeed" value="300"/>
+                        <property name="minSpeed" value="100"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="database" class="com.baidu.bean.Database">
+
+        <property name="properties">
+            <props>
+                <prop key="user">root</prop>
+                <prop key="password">1234</prop>
+                <prop key="url">jdbc:mysql//test</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--配置单例的bean,供多个bean共享引用,需要导入util引用空间-->
+    <util:list id="cars">
+        <ref bean="car"/>
+        <ref bean="car2"/>
+    </util:list>
+
+    <!--引用单例的集合bean进行引用-->
+    <bean id="person4" class="com.baidu.bean.Person">
+        <property name="name" value="Rose"/>
+        <property name="age" value="56"/>
+        <property name="car">
+            <list>
+                <ref bean="car"/>
+                <ref bean="car2"/>
+            </list>
+        </property>
+    </bean>
+
+    <!--使用p空间-->
+    <bean id="person5" class="com.baidu.bean.Person" p:age="15" p:name="Kawhi" p:car-ref="cars"></bean>
+
+    <!--自动装配bean-->
+    <bean id="person6" class="com.baidu.bean.Person">
+        <property name="name" value="kobe"/>
+        <property name="age" value="18"/>
+    </bean>
+</beans>

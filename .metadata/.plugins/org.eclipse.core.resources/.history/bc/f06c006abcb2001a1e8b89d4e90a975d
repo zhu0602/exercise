@@ -1,0 +1,19 @@
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.impl.StdSchedulerFactory;
+import static org.quartz.TriggerBuilder.newTrigger;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+public class QuaztTest {
+	public static void main(String[] args) throws SchedulerException {
+		 Scheduler scheduler=StdSchedulerFactory.getDefaultScheduler();
+		 // jobDetail 是执行的任务,trigger是执行任务的时间//
+		 Trigger trigger=newTrigger().withIdentity("tr1", "group1")//设置触发器的名字和级别
+		.startNow()//启动trigger
+		.withSchedule(simpleSchedule().withIntervalInSeconds(1)//1秒执行一次任务
+		.repeatForever()//不间断的执行
+		).build();
+		scheduler.scheduleJob(jobDetail, trigger);
+		 
+	}
+}

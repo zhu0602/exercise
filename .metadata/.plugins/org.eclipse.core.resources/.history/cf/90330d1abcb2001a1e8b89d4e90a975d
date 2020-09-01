@@ -1,0 +1,17 @@
+import java.util.Map;
+
+import org.quartz.Job;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+public class MysqlDetail  implements Job{
+
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		JobDetail jobDetail = context.getJobDetail();
+		Map  map = jobDetail.getJobDataMap();
+		System.out.println("»ŒŒÒ÷¥––:"+map.get("user"));
+	}
+
+	
+	
+}

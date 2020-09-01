@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--配置目标类Bean-->
+    <bean id="arithmeticCalculator" class="com.zaotong.springaopxml.ArithmeticCalculatorImpl">
+    </bean>
+    <!--配置切面的Bean-->
+    <bean id="loggerAspect" class="com.zaotong.springaopxml.LoggerAspect"/>
+    <bean id="validateAspect" class="com.zaotong.springaopxml.ValidateAspect"/>
+
+     <!--配置AOP-->
+    <aop:config>
+        <!--配置切入点表达式-->
+        <aop:pointcut id="pointCut" expression="execution(* com.zaotong.springaopxml.ArithmeticCalculator.*(..))"/>
+        <!--配置切入点-->
+        <aop:aspect ref="loggerAspect" order="2">
+            <aop:before method="beforeAdvice"  pointcut-ref="pointCut"/>
+            <aop:after-returning method="returnAdvice" pointcut-ref="pointCut" returning="result"/>
+            <aop:after-throwing method="throwAdvice" pointcut-ref="pointCut" throwing="e"/>
+            <aop:around method="aroundAdvice" pointcut-ref="pointCut" />
+        </aop:aspect>
+
+        <aop:aspect  ref="validateAspect" order="1">
+            <aop:before method="beforeAdvice" pointcut-ref="pointCut"></aop:before>
+        </aop:aspect>
+    </aop:config>
+</beans>

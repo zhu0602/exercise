@@ -1,0 +1,34 @@
+单个参数：mybatis不会做特殊处理，
+	#{参数名/任意名}：取出参数值。\
+
+多个参数： mybatis会做特殊处理
+         将其封装成map
+         key: param1,paramN,或者参数的索引也可以
+         value: 传入的参数值
+         #{}就是从指定的map中获取key
+   异常：
+	org.apache.ibatis.binding.BindingException: 
+	Parameter 'id' not found. 
+	Available parameters are [1, 0, param1, param2]
+操作：
+	方法：public Employee getEmpByIdAndLastName(Integer id,String lastName);
+	取值：#{id},#{lastName}     
+
+【命名参数】: 明确指定封装的参数时的key; @param("id") id
+     多个参数会封装成一个map
+     key: 使用@param注解指定的值
+     value: 参数值
+    #｛指定的key｝ 取出对应的参数值  
+    
+    
+#{}：可以获取map中的值或者pojo对象属性的值；
+${}：可以获取map中的值或者pojo对象属性的值；     
+
+	#{}是预编译的方式，将参数设置到sql语句中去，prepareStatement防止sql注入
+ 	${}取出值直接拼在sql语句中，会有安全问题
+ 	
+ 	原生的jdbc不支持预编译的地方，我们可以使用${}
+ 	比如： 动态排序，获取分库分表
+ 	select * from tbl_employee order ${lastName} 
+ 	
+ 	   	

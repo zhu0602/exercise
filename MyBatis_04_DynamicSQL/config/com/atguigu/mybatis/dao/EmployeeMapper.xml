@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 接口式开发 namespace名称空间；接口的全类名 标签中的id是： 唯一标识 resultType是： 返回值类型 #｛id｝从传递的参数中取出id -->
+<mapper namespace="com.atguigu.mybatis.dao.EmployeeMapper">
+
+	<select id="getEmployeeById"
+		resultType="com.atguigu.mybatis.bean.Employee" databaseId="mysql">
+		select
+		email,last_name,id,gender from tbl_employee where id = #{id}
+	</select>
+
+	<select id="getEmpByIdReturnMap" resultType="map">
+		select * from tbl_employee where id=#{id}
+	</select>
+  
+  	<select id="getEmpByLastNameLikeReturnMap" resultType="com.atguigu.mybatis.bean.Employee">
+	    select * from tbl_employee where  last_name like #{lastName}
+	</select>
+  
+  
+	<select id="getEmployeeByIdAndLastName"
+		resultType="com.atguigu.mybatis.bean.Employee" databaseId="mysql">
+		select
+		email,last_name,id,gender from tbl_employee 
+		where id = #{id} and last_name=#{lastName}
+	</select>
+
+	<select id="getEmployeeById"
+		resultType="com.atguigu.mybatis.bean.Employee" databaseId="oracle">
+		select EMAIL
+		email ,LAST_NAME lastName,EMPLOYEE_ID id
+		from EMPLOYEES
+		where EMPLOYEE_ID = #{id}
+	</select>
+
+
+	<!--mysql支持自增主键，自增主键值的获取，
+	    mybatis也是利用statement.getGenreatedKeys()； 
+	    useGeneratedKeys="true"； 使用自增主键获取主键值策略 
+	    keyProperty： 指定对应的主键属性，
+	    mybatis获取到主键后，将主键信息映射到javaBean的哪个属性 -->
+	<insert id="addEmp" databaseId="mysql" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into tbl_employee(last_name,email,gender)
+		values(#{lastName},#{email},#{gender})
+	</insert>
+
+	<!-- orcale不支持主键自增策略，使用序列来模拟自增
+	     每次插入数据的主键都是从序列中获取；如何获取到序列的值
+	 -->
+	<insert id="addEmp" databaseId="oracle">
+	    <!-- 
+	    	keyProperty: 当前查出的主键封装到javaBean中的id属性，
+	    	resuletType： 查出的数据的返回值类型
+	    	order: 当前sql是在插入sql之前运行
+	    	BEFORE: 先运行selectKey的sql获取主键，然后封装到javaBean的属性中
+	    	                然后插入的sql就可以取出属性中的id
+	     -->
+	    <selectKey keyProperty="id" resultType="Integer" order="BEFORE">
+	    	select EMPLOYEES_SEQ.NEXTVAL from dual
+	    </selectKey>
+		insert into EMPLOYEES(EMPLOYEE_ID,LAST_NAME,EMAIL)
+		values(#{id},#{lastName},#{email})
+	</insert>
+	
+	
+	<select id="getEmpByMap" resultType="com.atguigu.mybatis.bean.Employee">
+		select * from tbl_employee where id=#{id}
+	</select>
+	
+	
+</mapper>

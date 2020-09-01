@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 接口式开发 namespace名称空间；接口的全类名 标签中的id是： 唯一标识 resultType是： 返回值类型 #｛id｝从传递的参数中取出id -->
+<mapper namespace="com.atguigu.mybatis.dao.EmployeePlusMapper">
+
+	<!-- 自定义某个javaBean的规则 type： 自定义规则的java类 id: 唯一的id方便使用 -->
+	<resultMap type="com.atguigu.mybatis.bean.Employee"
+		id="empMap">
+		<!-- id标签: 指定主键列的规则， id定义主键，底层会有优化 column： 定义属于哪一列 property: 定义java类的哪个属性 -->
+		<id column="id" property="id" />
+		<!-- 定义普通列封装规则 -->
+		<result column="last_name" property="lastName" />
+		<result column="email" property="email" />
+	</resultMap>
+
+	<!-- resultMap： 自定义结果集映射规则 -->
+	<select id="getEmpById" resultMap="mydescrimination">
+		select * from tbl_employee
+		where id =#{id}
+	</select>
+
+	
+	<resultMap type="com.atguigu.mybatis.bean.Employee"
+		id="myEmpAndDep">
+		<id column="id" property="id" />
+		<result column="last_name" property="lastName" />
+		<result column="email" property="email" />
+		
+		<!-- association 可以指定联合的javaBean
+			 property: 指定哪个属性是联合的对象
+			 javaType： 指定属性的属于什么类型
+		-->
+		<association property="department" javaType="com.atguigu.mybatis.bean.Department">
+			<id column="d_id" property="id" />
+			<result column="dep_name" property="depName"/>
+		</association>
+	</resultMap>
+	
+	<!-- 场景一： 查询Employee的同时查询员工对应的部门 
+	  Employee===Department 一个员工有与之对应的部门信息； id 
+		last_name gender d_id did dept_name (private Department dept;) 
+		-->
+	<select id="getEmpAndDept" resultMap="myEmpAndDep">
+		select e.*,d.* from tbl_employee e,tbl_department d  
+		 where e.d_id=d.id and  e.id =#{id}
+	</select>
+	
+	
+	<resultMap type="com.atguigu.mybatis.bean.Employee" id="myEmpAndDepStep">
+		<id column="id" property="id" />
+		<result column="last_name" property="lastName" />
+		<result column="email" property="email" />
+		<!-- association： 定义关联对象的映射规则
+			property: 定义关联对象的属性
+			select: 表明当前属性是通过select指定的方法查询的
+			column：指定那一列值传递给这个方法
+			流程： 通过select指定的方法，查出对象，并封装给property属性
+		 -->
+		<association property="department" select="com.atguigu.mybatis.dao.DepartmentMapper.getDepById"
+			column="id">
+		</association>
+	</resultMap>
+	<!-- 使用association进行分步查询：
+		1、先按照员工id查询员工信息
+		2、根据查询员工信息中的d_id值去部门表查出部门信息
+		3、部门设置到员工中；
+	 -->
+	 	<select id="getEmpByIdStep" resultMap="myEmpAndDepStep">
+		select e.* from tbl_employee e  where e.id=#{id}
+	</select>
+	
+	<!-- 可以使用延迟加载（懒加载）；(按需加载)
+	 	Employee==>Dept：
+	 		我们每次查询Employee对象的时候，都将一起查询出来。
+	 		部门信息在我们使用的时候再去查询；
+	 		分段查询的基础之上加上两个配置：
+	  -->
+	  <select id="getEmps" resultMap="empMap">
+	  	select * from tbl_employee where d_id=#{id}
+	  </select>
+	  
+	  <!-- =======================鉴别器============================ -->
+	<!-- <discriminator javaType=""></discriminator>
+		鉴别器：mybatis可以使用discriminator判断某列的值，然后根据某列的值改变封装行为
+		封装Employee：
+			如果查出的是女生：就把部门信息查询出来，否则不查询；
+			如果是男生，把last_name这一列的值赋值给email;
+	 -->
+	 
+	 <resultMap type="com.atguigu.mybatis.bean.Employee" id="mydescrimination">
+	 	<id column="id" property="id" />
+		<result column="last_name" property="lastName" />
+		<result column="email" property="email" />
+		<!-- column: 判定的列名
+			javaType: 判定列对应的java类型
+		 -->
+		<discriminator javaType="string" column="gender">
+		     <!-- 如果gender是女生，将部门信息查询出来 -->
+			<case value="0" resultType="com.atguigu.mybatis.bean.Employee">
+				<association property="department" select="com.atguigu.mybatis.dao.DepartmentMapper.getDepById" column="id">
+				</association>
+			</case>
+			<case value="1" resultType="com.atguigu.mybatis.bean.Employee">
+				<result column="last_name" property="email" />
+			</case>
+		</discriminator>
+	 </resultMap>
+</mapper>

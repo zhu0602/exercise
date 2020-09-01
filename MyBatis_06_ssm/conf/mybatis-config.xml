@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<!-- 设置自动驼峰映射 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<!-- 全局开启二级缓存 -->
+		<setting name="cacheEnabled" value="true" />
+		<!-- 当传递null时，orcale数据库不支持jdbcType: OTHER -->
+		<!-- <setting name="jdbcTypeForNull" value="NULL"/> -->
+	    <!--显示的指定每个我们需要更改的配置的值，即使他是默认的。防止版本更新带来的问题  -->
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="aggressiveLazyLoading" value="false" />
+	</settings>
+
+	<!-- MyBatis 可以根据不同的数据库厂商执行不同的语句 -->
+	<databaseIdProvider type="DB_VENDOR">
+		<!-- 为不同的数据库厂商起别名 -->
+		<property name="MySQL" value="mysql"/>
+		<property name="Oracle" value="oracle"/>
+		<property name="SQL Server" value="sqlserver"/>
+	</databaseIdProvider>
+	
+
+</configuration>

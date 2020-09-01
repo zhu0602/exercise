@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.atguigu.mybatis.dao.EmployeeMapperDynamicSQL">
+	<!-- • if:判断 • choose (when, otherwise):分支选择；带了break的swtich-case 如果带了id就用id查，如果带了lastName就用lastName查;只会进入其中一个 
+		• trim 字符串截取(where(封装查询条件), set(封装修改条件)) • foreach 遍历集合 -->
+
+
+	<select id="getEmpsByConditionTrim"
+		resultType="com.atguigu.mybatis.bean.Employee">
+		select * from tbl_employee
+		<!-- 后面多出的and或者or where标签不能解决
+		  trim标签体中是整个字符串拼串 后的结果。
+		  prefix="": 前缀prefix给拼串后的整个字符串加一个前缀 
+		suffix="":后缀 suffix给拼串后的整个字符串加一个后缀 
+		prefixOverrides="": 前缀覆盖： 去掉整个字符串前面多余的字符 
+	    suffixOverrides="" 后缀覆盖：去掉整个字符串后面多余的字符 -->
+		<!-- 自定义字符串的截取规则 -->
+		<trim prefix="where" suffixOverrides="and">
+			<if test="id!=null">
+				id=#{id} and
+			</if>
+			<if test="lastName!=null &amp;&amp; lastName!=&quot;&quot;">
+				last_name like #{lastName} and
+			</if>
+			<if test="email!=null and email.trim()!=&quot;&quot;">
+				email=#{email} and
+			</if>
+			<!-- ognl会进行字符串与数字的转换判断 "0"==0 -->
+			<if test="gender==0 or gender==1">
+				gender=#{gender}
+			</if>
+		</trim>
+	</select>
+
+
+	<select id="getEmpsByConditionChoose"
+		resultType="com.atguigu.mybatis.bean.Employee">
+		select * from tbl_employee
+		<!-- 分支选择 ： 带了break的switch-case 如果带了id就用id查，如果带了lastName就用lastName查 -->
+		<where>
+			<choose>
+
+				<when test="id!=null">
+					id=#{id}
+				</when>
+				<when test="lastName!=null">
+					last_name=#{lastName}
+				</when>
+				<otherwise>
+					gender=0
+				</otherwise>
+
+			</choose>
+		</where>
+	</select>
+	
+	
+	<update id="updateEmp" >
+		update tbl_employee 
+	<!-- 	<set>
+			<if test="lastName!=null">
+				last_name=#{lastName},
+			</if>
+			<if test="email!=null">
+				email=#{email,jdbcType=CHAR},
+			</if>
+			<if test="gender!=null">
+				gender=#{gender},
+			</if>
+		</set> -->
+		<!-- 自定义字符串的截取规则 -->
+		<trim prefix="set" suffixOverrides=",">
+			<if test="lastName!=null">
+				last_name=#{lastName},
+			</if>
+			<if test="email!=null">
+				email=#{email,jdbcType=CHAR},
+			</if>
+			<if test="gender!=null">
+				gender=#{gender},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+	
+	
+		<!-- 自定义某个javaBean的规则 type： 自定义规则的java类 id: 唯一的id方便使用 -->
+	<resultMap type="com.atguigu.mybatis.bean.Employee"
+		id="empMap">
+		<!-- id标签: 指定主键列的规则， id定义主键，底层会有优化 column： 定义属于哪一列 property: 定义java类的哪个属性 -->
+		<id column="id" property="id" />
+		<!-- 定义普通列封装规则 -->
+		<result column="last_name" property="lastName" />
+		<result column="email" property="email" />
+	</resultMap>
+	
+	<select id="getEmpsByConditionForeach" resultMap="empMap">
+		select * from tbl_employee
+		<!-- collection属性： 指的是遍历的集合
+		    list类型的参数会默认会特殊处理，map的key就叫list
+			item:  是用来接收遍历出来的每一个对象
+			index： 集合中是一个索引，但是在map中是一个key,value是item中的值
+			open: 遍历出所有结果拼装出一个开始的字符串
+			close:遍历出所有结果拼装出一个结束的字符串
+		 -->
+		<foreach collection="list" item="id" index="i" open="where id in(" close=")" 
+		separator=",">
+		 #{id}
+		</foreach>
+	</select>
+	
+	
+	 
+	 <!-- 批量保存 -->
+	 <!--public void addEmps(@Param("emps")List<Employee> emps);  -->
+	 <!--MySQL下批量保存：可以foreach遍历   mysql支持values(),(),()语法-->
+	<insert id="addEmps" databaseId="mysql">
+	 <!--    <foreach collection="list" item="emp" separator=";">
+		 insert into tbl_employee(<include refid="insertColumn" />)
+	     values
+		 (#{emp.lastName},#{emp.email},#{emp.dId})
+		</foreach> -->
+		insert into tbl_employee(<include refid="insertColumn" />)
+		values
+		 <foreach collection="list" item="emp" separator=",">
+		    (#{emp.lastName},#{emp.email},#{emp.dId})
+		 </foreach>
+	</insert>
+	
+	<!-- oracle不支持insert into values(),(),),()
+		orcle支持的多条insert插入式 
+		begin
+		  isnert 多条语句
+		end;
+		<foreach collection="list" item="emp" open="begin" close="end;">
+		 insert into employees(<include refid="insertColumn" />)
+		 values
+		 (EMPLOYEES_SEQ.nextVal,#{emp.lastName},#{emp.email}); 		
+		</foreach>
+		     -->
+	<insert id="addEmps" databaseId="oracle">
+	 	insert into employees(<include refid="insertColumn"/>)
+	 	<foreach collection="list" item="emp" open="select EMPLOYEES_SEQ.nextVal,cd.* from(" close=") cd"
+	 		separator="union">
+	 	   select #{emp.lastName},#{emp.email} from dual
+	 	</foreach>
+	</insert>
+	
+	
+	<sql id="insertColumn">
+	  <if test="_databaseId=='mysql'">
+	    last_name,email,d_id
+	  </if>
+	 <if test="_databaseId=='oracle'">
+	    employee_id,last_name,email
+	  </if>
+	</sql>
+</mapper>

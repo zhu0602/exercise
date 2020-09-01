@@ -1,0 +1,28 @@
+package com.atguigu.test;
+
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+
+
+@WebService
+public class WeatherServiceImpl implements WeatherService {
+
+	@Override
+	public String getCity(String name) {
+		if ("上海".equals(name)) {
+			System.out.println(name+"是晴天26摄氏度");
+			return name;
+		}else if ("北京".equals(name)) {
+			System.out.println(name+"是雨天12摄氏度");
+			return name;
+		}
+		return "查询不到该城市的天气";
+	}
+
+	@WebMethod(exclude =true)
+	public void delete() {
+		
+	}
+	
+
+}

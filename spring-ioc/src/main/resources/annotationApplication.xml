@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+    <!--
+     resource-pattern属性: 如果仅希望扫描特定的类,而非基包下所有的类,可以使用此属性
+    -->
+   <!-- <context:component-scan
+            base-package="com.baidu.annotation" resource-pattern="repository/*.class">
+    </context:component-scan>
+-->
+
+    <context:component-scan
+            base-package="com.baidu.annotation" >
+        <!--
+        context:exclude-filter: 子节点指定排除表达式的组件
+        context:include-filter: 子节点指定包含表达式的组件,该组件需要与use-default-filter组合使用
+        -->
+        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"></context:exclude-filter>-->
+        <!--<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"></context:include-filter>-->
+        <!--<context:include-filter type="assignable" expression="com.baidu.annotation.repository.UserRepository"></context:include-filter>-->
+        <!--<context:exclude-filter type="assignable" expression="com.baidu.annotation.repository.UserRepository"></context:exclude-filter>-->
+    </context:component-scan>
+</beans>

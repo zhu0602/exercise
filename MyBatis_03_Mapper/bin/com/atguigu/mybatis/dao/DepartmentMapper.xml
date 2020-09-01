@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 接口式开发 namespace名称空间；接口的全类名 标签中的id是： 唯一标识 resultType是： 返回值类型 #｛id｝从传递的参数中取出id -->
+<mapper namespace="com.atguigu.mybatis.dao.DepartmentMapper">
+	
+	 <resultMap type="com.atguigu.mybatis.bean.Department" id="myDepart">
+		<id column="id" property="id"/>
+		<result column="dep_name" property="depName"/>	 	
+	 </resultMap>
+	
+	<select id="getDepById" resultMap="myDepart">
+		select * from tbl_department where id =#{id}
+		<trim suffixOverrides=""></trim>
+	</select>
+	
+	<resultMap type="com.atguigu.mybatis.bean.Department" id="myDepartPlus">
+			<id column="did" property="id"/>
+		    <result column="dep_name" property="depName"/>
+		    <!-- 定义关联集合属性的封装类型
+		    	ofType： 集合属性中的类型
+		     -->	
+		    <collection property="emps" ofType="com.atguigu.mybatis.bean.Employee">
+		    	<!-- 定义集合中封装的元素 -->
+		    	<id column="id" property="id"/>
+		    	<result column="last_name" property="lastName" />
+		    	<result column="EMAIL" property="email" />
+		    </collection>
+	</resultMap>
+	
+	<select id="getDepByIdPlus" resultMap="myDepartPlus">
+		SELECT d.id did,d.dep_name,e.* FROM tbl_department d 
+		LEFT JOIN tbl_employee e
+		ON e.d_id=d.id
+		WHERE d.id=#{id}
+	</select>
+	
+	
+	<resultMap type="com.atguigu.mybatis.bean.Department" id="myDepartStep">
+			<id column="did" property="id"/>
+		    <result column="dep_name" property="depName"/>
+		    <!-- 定义关联集合属性的封装类型
+		    	ofType： 集合属性中的类型
+		     -->	
+		    <collection property="emps" select="com.atguigu.mybatis.dao.EmployeePlusMapper.getEmps"
+		    column="{id=did}"  fetchType="eager">
+		    </collection>
+	</resultMap>
+	
+	<!-- 分步查询-->
+	<select id="getDepByIdStep" resultMap="myDepartStep">
+		SELECT d.id did,d.dep_name FROM tbl_department d 
+		WHERE d.id=#{id}
+	</select>
+	
+	<!--
+		扩展：多列的值传递过去：
+			将多列的值封装map传递；
+			column="{key1=column1,key2=column2}"
+	    fetchType="lazy"
+		fetchType="lazy"：表示使用延迟加载；
+				- lazy：延迟
+				- eager：立即
+	 -->
+	
+</mapper>
